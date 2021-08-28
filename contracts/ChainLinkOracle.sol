@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity >=0.6.0;
 
 import "@chainlink/contracts/src/v0.6/ChainlinkClient.sol";
 
@@ -9,7 +9,7 @@ import "@chainlink/contracts/src/v0.6/ChainlinkClient.sol";
 contract ChainLinkOracle is ChainlinkClient {
     using Chainlink for Chainlink.Request;
   
-    uint256 public daysMetGoal;
+    // uint256 public daysMetGoal;
     
     address private oracle;
     bytes32 private jobId;
@@ -32,9 +32,9 @@ contract ChainLinkOracle is ChainlinkClient {
     /**
      * Create a Chainlink request to retrieve API response, find the target
      */
-    function requestNumberOfDaysMetGoal(string memory url) public returns (bytes32 requestId) 
+    function requestNumberOfDaysMetGoal(string memory url, address callBackContract, bytes4 functionSelector) public returns (bytes32 requestId) 
     {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, callBackContract, functionSelector);
         
         // Set the URL to perform the GET request on
         request.add("get", url);
@@ -47,10 +47,10 @@ contract ChainLinkOracle is ChainlinkClient {
     /**
      * Receive the response in the form of uint256
      */ 
-    function fulfill(bytes32 _requestId, uint256 _daysMetGoal) public recordChainlinkFulfillment(_requestId)
-    {
-        daysMetGoal = _daysMetGoal;
-    }
+    // function fulfill(bytes32 _requestId, uint256 _daysMetGoal) public recordChainlinkFulfillment(_requestId)
+    // {
+    //     daysMetGoal = _daysMetGoal;
+    // }
 
     // function withdrawLink() external {} - Implement a withdraw function to avoid locking your LINK in the contract
 }

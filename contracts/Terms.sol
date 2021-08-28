@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.6.0;
+pragma solidity >=0.6.0;
 import "./Ownable.sol";
 import "./ChainLinkOracle.sol";
 import "./Helper.sol";
 
-contract Terms is Ownable, Helper, ChainLinkOracle {
+contract Terms is Ownable, Helper {
 
     event NewEntry(address _address, uint betAmount, uint endDate, uint stepsGoal);
-    event resultsReceived(address _address, uint returnedAmount, bool outcome, uint avgHistoricalSteps);
+    event resultsReceived(address _address, uint _returnedAmount, uint256 _daysCompleted, uint256 _numberOfDays);
     
 
     struct Entry {
@@ -22,12 +22,15 @@ contract Terms is Ownable, Helper, ChainLinkOracle {
     // This declares a state variable that
     // stores a `Entry` struct for each possible entry.
     mapping(address => Entry) entries;
+    
+    // Map the chainlink requests to their corresponding caller address for use in callback function
+    mapping(bytes32 => address) requests;
     // TODO mapping of accessToken to addresses? We need prevent multiple addresses from using the same access token
     
-    event Greet(string message);
+    ChainLinkOracle chainLinkOracle;
 
-    function greet() public {
-        emit Greet("Hello World!");
+    constructor() public {
+        chainLinkOracle = new ChainLinkOracle();
     }
 
     function makeEntry(string memory _accessToken,uint256 stepsGoal, uint16 numberOfDays) public payable {
@@ -54,20 +57,34 @@ contract Terms is Ownable, Helper, ChainLinkOracle {
         return string(abi.encodePacked(a, b, c, d, e, f, g, h));
     }
 
-    function _calculatePayout(uint _daysCompleted, uint _numberOfDays, uint betAmount) internal returns(uint256){
+    function _calculatePayout(uint _daysCompleted, uint _numberOfDays, uint _betAmount) internal pure returns(uint256){
         //TODO - check if this math function works properly
-        return (_daysCompleted/_numberOfDays) * betAmount;
+        return (_daysCompleted/_numberOfDays) * _betAmount;
     } 
 
-    function checkResults() external returns(bytes32){
+    function CallerFulfill(bytes32 _requestId, uint256 _daysCompleted) public {
+        //Find which address this request id belongs to
+        address payable _requesterAddress = address(uint160(requests[_requestId]));
+        // look up their entry details
+        Entry memory entry = entries[_requesterAddress];
+        require(entries[_requesterAddress].betAmount > 0, "no entry found");
+        uint payoutAmount = _calculatePayout(_daysCompleted, entry.numberOfDays, entry.betAmount);
+        // delete the entry before payout 
+        delete entries[_requesterAddress];
+        _requesterAddress.transfer(payoutAmount);
+        emit resultsReceived( _requesterAddress,  payoutAmount, _daysCompleted, entry.numberOfDays);
+
+    } 
+
+    function checkResults() external {
         Entry memory entry = entries[msg.sender];
         // if days for contest + start date is less than today, let them know the contest isn't over yet
         // if days for contest + start date is past the current time, make a call to oracle
         require(entry.startDate + entry.numberOfDays < uint32(now),"Contest has not finished yet");
         string memory url = _buildOuraRequestUrl(entry.startDate, entry.startDate + entry.numberOfDays, entry.accessToken, entry.stepsGoal);
-        //TODO , change to await for number of days goal met, then calculate payout and pay user. Before paying out, delete their entry.
-        // delete entries[msg.sender];
-        return requestNumberOfDaysMetGoal(url);
+        //Save the request id
+        bytes32 _requestId = chainLinkOracle.requestNumberOfDaysMetGoal(url, address(this), this.CallerFulfill.selector);
+        requests[_requestId] = msg.sender;
     }
 
 }
