@@ -1,7 +1,13 @@
 import { Navbar } from "../components/Navbar"
 import { Settings } from "./Settings";
 
+import { getUserAddress } from '../utils';
+
+
 export default function Home() {
+
+    const userAddr = getUserAddress();
+
   return (
     <div>
     <Navbar />
