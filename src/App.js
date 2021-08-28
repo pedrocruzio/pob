@@ -1,7 +1,10 @@
+import { CreateChallenge } from "./views/CreateChallenge";
+
 function App() {
   return (
     <div className="App">
-      Ethereum Fullstack Template
+      <h3>Ethereum Fullstack Template</h3>
+      <CreateChallenge />
     </div>
   );
 }
