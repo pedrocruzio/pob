@@ -15,27 +15,29 @@ export default function Settings() {
                   <div className="px-4 py-5 bg-white sm:p-6">
                     <div className="grid grid-cols-6 gap-6">
                       <div className="col-span-6 sm:col-span-4">
-                        <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="user-address" className="block text-sm font-medium text-gray-700">
                           Your Account
                         </label>
                         <input
+                        disabled
                           type="text"
-                          name="email-address"
-                          id="email-address"
-                          autoComplete="email"
+                          name="user-address"
+                          id="user-address"
+                          autoComplete="address"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
   
-                      <div className="col-span-6 sm:col-span-3">
-                        <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                      <div className="col-span-6 sm:col-span-2">
+                        <label htmlFor="network" className="block text-sm font-medium text-gray-700">
                           Network
                         </label>
                         <select
-                          id="country"
-                          name="country"
-                          autoComplete="country"
-                          className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            disabled
+                          id="network"
+                          name="network"
+                          autoComplete="network"
+                          className="disbaled:opacity-50 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         >
                           <option>Kovan</option>
                           <option>Rinkeby</option>
@@ -44,51 +46,51 @@ export default function Settings() {
                       </div>
   
                       <div className="col-span-6">
-                        <label htmlFor="street-address" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="oura-access-token" className="block text-sm font-medium text-gray-700">
                           Oura Access Token
                         </label>
                         <input
                           type="text"
-                          name="street-address"
-                          id="street-address"
-                          autoComplete="street-address"
+                          name="oura-access-token"
+                          id="oura-access-token"
+                          autoComplete="oura-access-token"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
   
                       <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                        <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="num-of-days" className="block text-sm font-medium text-gray-700">
                           Number of Days
                         </label>
                         <input
                           type="text"
-                          name="city"
-                          id="city"
+                          name="num-of-days"
+                          id="num-of-days"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
   
                       <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                        <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="num-of-steps" className="block text-sm font-medium text-gray-700">
                           Number of Steps
                         </label>
                         <input
                           type="text"
-                          name="state"
-                          id="state"
+                          name="num-of-steps"
+                          id="num-of-steps"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
   
                       <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                        <label htmlFor="postal-code" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="bet-amount" className="block text-sm font-medium text-gray-700">
                           Bet Amount (in ETH)
                         </label>
                         <input
                           type="text"
-                          name="postal-code"
-                          id="postal-code"
-                          autoComplete="postal-code"
+                          name="bet-amount"
+                          id="bet-amount"
+                          autoComplete="bet-amount"
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
