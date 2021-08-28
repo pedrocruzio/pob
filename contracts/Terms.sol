@@ -7,7 +7,7 @@ import "./Helper.sol";
 
 contract Terms is Ownable, Helper {
 
-    event NewEntry(address _address, uint betAmount, uint endDate, uint stepsGoal);
+    event NewEntry(address _address, uint betAmount, uint stepsGoal, uint16 numberOfDays);
     event resultsReceived(address _address, uint _returnedAmount, uint256 _daysCompleted, uint256 _numberOfDays);
     
 
@@ -40,7 +40,7 @@ contract Terms is Ownable, Helper {
         require(msg.value > 0, "Please include a bet amount");
         uint32 currentDate = uint32(now);
         entries[msg.sender] = Entry(stepsGoal, msg.value, currentDate, numberOfDays, _accessToken, true);
-        emit NewEntry(msg.sender, entries[msg.sender].betAmount, currentDate + entries[msg.sender].numberOfDays, entries[msg.sender].stepsGoal);
+        emit NewEntry(msg.sender, entries[msg.sender].betAmount , entries[msg.sender].stepsGoal, entries[msg.sender].numberOfDays);
     }
 
     function _buildOuraRequestUrl (uint32 _startDate, uint32 _endDate, string memory _accessToken, uint256 _stepsGoal) private pure returns(string memory){

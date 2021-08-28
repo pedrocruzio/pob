@@ -23,7 +23,7 @@ contract ChainLinkOracle is ChainlinkClient {
      * Fee: 0.1 LINK
      */
     constructor() public {
-        setPublicChainlinkToken();
+        // temporarily move setPublicChainLinkToken function down below so that we can run unit tests
         oracle = 0xc57B33452b4F7BB189bB5AfaE9cc4aBa1f7a4FD8;
         jobId = "d5270d1c311941d0b08bead21fea7747";
         fee = 0.1 * 10 ** 18; // (Varies by network and job)
@@ -34,6 +34,8 @@ contract ChainLinkOracle is ChainlinkClient {
      */
     function requestNumberOfDaysMetGoal(string memory url, address callBackContract, bytes4 functionSelector) public returns (bytes32 requestId) 
     {
+        setPublicChainlinkToken();
+        
         Chainlink.Request memory request = buildChainlinkRequest(jobId, callBackContract, functionSelector);
         
         // Set the URL to perform the GET request on
