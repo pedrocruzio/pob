@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { ethers } from 'ethers';
+// import { useState } from 'react';
 
-import { requestAccount } from '../utils';
+import { getUserAddress } from '../utils';
 
 function CreateChallenge() {
-    const ouraAccessToken, numberOfDays, numberOfSteps, betAmount;
+    // const ouraAccessToken, numberOfDays, numberOfSteps, betAmount;
+
+    const userAddr = getUserAddress();
 
     return (
         <div>
@@ -27,6 +28,8 @@ function CreateChallenge() {
                 </label>
                 <input type="submit" value="Submit" />
             </form>
+
+         
         </div>
     )
 }

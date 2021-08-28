@@ -3,6 +3,7 @@
  */
  require("@nomiclabs/hardhat-waffle");
  require("dotenv").config();
+ require('hardhat-abi-exporter');
  
  // Possible network values
  const TEST_NETWORK = "TEST_NETWORK"
