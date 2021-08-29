@@ -12,4 +12,14 @@ function getContract(contractAddr, artifact) {
     return contract;
 }
 
-export { requestAccount, getContract }
+async function getUserAddress() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    // Prompt user for account connections
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const accountAddress = await signer.getAddress();
+    console.log("Account:", accountAddress);
+    return accountAddress;
+}
+
+export { requestAccount, getContract, getUserAddress }
