@@ -4,8 +4,13 @@ pragma solidity >=0.6.0;
 import "./Ownable.sol";
 import "./ChainLinkOracle.sol";
 import "./Helper.sol";
+// import "@openzeppelin/contracts/math/SafeMath.sol";
+import "./SafeMath.sol";
 
 contract Terms is Ownable, Helper, ChainLinkOracle {
+     using SafeMath for uint256;
+     using SafeMath for uint16;
+
 
     event NewEntry(address _address, uint betAmount, uint stepsGoal, uint16 numberOfDays);
     event resultsReceived(address _address, uint _returnedAmount, uint256 _daysCompleted, uint256 _numberOfDays);
@@ -57,9 +62,9 @@ contract Terms is Ownable, Helper, ChainLinkOracle {
         return string(abi.encodePacked(a, b, c, d, e, f, g, h));
     }
 
-    function _calculatePayout(uint _daysCompleted, uint _numberOfDays, uint _betAmount) internal pure returns(uint256){
-        //TODO - check if this math function works properly
-        return (_daysCompleted/_numberOfDays) * _betAmount;
+    //made this a public function for testing purposes but can be converted back to internal later
+    function _calculatePayout(uint256 _daysCompleted, uint16 _numberOfDays, uint256 _betAmount) public pure returns(uint256){
+        return (_daysCompleted.mul(_betAmount)).div(_numberOfDays);
     } 
 
     function CallerFulfill(bytes32 _requestId, uint256 _daysCompleted) public {
@@ -78,9 +83,8 @@ contract Terms is Ownable, Helper, ChainLinkOracle {
 
     function checkResults() external {
         Entry memory entry = entries[msg.sender];
-        // if days for contest + start date is less than today, let them know the contest isn't over yet
-        // if days for contest + start date is past the current time, make a call to oracle
-        require(entry.startDate + entry.numberOfDays < uint32(now),"Contest has not finished yet");
+        // Check to see that the number of days committed since they've started has passed
+        require(entry.startDate + (entry.numberOfDays * 1 days) < uint32(now),"Contest has not finished yet");
         string memory url = _buildOuraRequestUrl(entry.startDate, entry.startDate + entry.numberOfDays, entry.accessToken, entry.stepsGoal);
         //Save the request id
         bytes32 _requestId = requestNumberOfDaysMetGoal(url, address(this), this.CallerFulfill.selector);

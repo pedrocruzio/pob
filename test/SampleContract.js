@@ -49,6 +49,11 @@ describe("Terms Contract", () => {
         });
       });
       
+      describe("Correct Payout function", function() {
+        it("it should be able to pay back 2500 gwei", async () => {
+        expect(await termContract._calculatePayout(2, 8, 10000)).to.equal(2500);
+        });
+      });
 
   
 
