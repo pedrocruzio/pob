@@ -5,7 +5,7 @@ import "./Ownable.sol";
 import "./ChainLinkOracle.sol";
 import "./Helper.sol";
 
-contract Terms is Ownable, Helper {
+contract Terms is Ownable, Helper, ChainLinkOracle {
 
     event NewEntry(address _address, uint betAmount, uint stepsGoal, uint16 numberOfDays);
     event resultsReceived(address _address, uint _returnedAmount, uint256 _daysCompleted, uint256 _numberOfDays);
@@ -27,11 +27,11 @@ contract Terms is Ownable, Helper {
     mapping(bytes32 => address) requests;
     // TODO mapping of accessToken to addresses? We need prevent multiple addresses from using the same access token
     
-    ChainLinkOracle chainLinkOracle;
+    //ChainLinkOracle chainLinkOracle;
 
-    constructor() public {
-        chainLinkOracle = new ChainLinkOracle();
-    }
+    //constructor() public {
+    //    chainLinkOracle = new ChainLinkOracle();
+    //}
 
     function makeEntry(string memory _accessToken,uint256 stepsGoal, uint16 numberOfDays) public payable {
         // Check that user does not have a active entry
@@ -83,7 +83,7 @@ contract Terms is Ownable, Helper {
         require(entry.startDate + entry.numberOfDays < uint32(now),"Contest has not finished yet");
         string memory url = _buildOuraRequestUrl(entry.startDate, entry.startDate + entry.numberOfDays, entry.accessToken, entry.stepsGoal);
         //Save the request id
-        bytes32 _requestId = chainLinkOracle.requestNumberOfDaysMetGoal(url, address(this), this.CallerFulfill.selector);
+        bytes32 _requestId = requestNumberOfDaysMetGoal(url, address(this), this.CallerFulfill.selector);
         requests[_requestId] = msg.sender;
     }
 
